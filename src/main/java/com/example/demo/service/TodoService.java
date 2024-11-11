@@ -36,6 +36,10 @@ public class TodoService {
         return repository.findByUserId(userId);
     }
 
+    public Optional<TodoEntity> getTodo(final String todoId) {
+        return repository.findById(todoId);
+    }
+
     public List<TodoEntity> update(final TodoEntity entity) {
         validate(entity);
         final Optional<TodoEntity> original = repository.findById(entity.getId());
