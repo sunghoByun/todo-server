@@ -27,6 +27,78 @@ public class TodoDetailController {
     @Autowired
     private TodoService todoService;
 
+    @DeleteMapping("/details")
+    public ResponseEntity<?> deleteTodoDetail(@AuthenticationPrincipal String userId, @PathVariable("todoId") String todoId, @RequestBody TodoDetailDTO dto) {
+        try {
+
+//            Optional<TodoEntity> todoEntity = todoService.getTodo(todoId);
+//
+//            if (todoEntity.isEmpty()) {
+//                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Todo not found");
+//            }
+//            TodoDetailEntity entity = TodoDetailDTO.toEntity(dto, todoEntity.get());
+            Optional<TodoDetailEntity> entity = todoDetailService.get(dto.getDetailId());
+
+            List<TodoDetailEntity> entities = todoDetailService.delete(entity.get());
+
+            List<TodoDetailDTO> dtos = entities.stream().map(TodoDetailDTO::new).collect(Collectors.toList());
+
+            ResponseDTO<TodoDetailDTO> response = ResponseDTO.<TodoDetailDTO>builder().data(dtos).build();
+
+            return ResponseEntity.ok().body(response);
+        } catch (Exception e) {
+            ResponseDTO<TodoDetailDTO> response = ResponseDTO.<TodoDetailDTO>builder().error(e.getMessage()).build();
+
+            return ResponseEntity.badRequest().body(response);
+        }
+    }
+    @PutMapping("/details")
+    public ResponseEntity<?> updateTodoDetail(@AuthenticationPrincipal String userId, @PathVariable("todoId") String todoId, @RequestBody TodoDetailDTO dto) {
+        try {
+            Optional<TodoEntity> todoEntity = todoService.getTodo(todoId);
+
+            if (todoEntity.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Todo not found");
+            }
+            TodoDetailEntity entity = TodoDetailDTO.toEntity(dto, todoEntity.get());
+
+            Optional<TodoDetailEntity> entities = todoDetailService.update(entity);
+
+            List<TodoDetailDTO> dtos = entities.stream().map(TodoDetailDTO::new).collect(Collectors.toList());
+
+            ResponseDTO<TodoDetailDTO> response = ResponseDTO.<TodoDetailDTO>builder().data(dtos).build();
+
+            return ResponseEntity.ok().body(response);
+        } catch (Exception e) {
+            ResponseDTO<TodoDetailDTO> response = ResponseDTO.<TodoDetailDTO>builder().error(e.getMessage()).build();
+
+            return ResponseEntity.badRequest().body(response);
+        }
+    }
+
+    @GetMapping("/details")
+    public ResponseEntity<?> getTodoDetail(@AuthenticationPrincipal String userId, @PathVariable("todoId") String todoId) {
+        try {
+            Optional<TodoEntity> todoEntity = todoService.getTodo(todoId);
+
+            if (todoEntity.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Todo not found");
+            }
+
+            List<TodoDetailEntity> entities = todoDetailService.getAll(todoEntity.get());
+
+            List<TodoDetailDTO> dtos = entities.stream().map(TodoDetailDTO::new).collect(Collectors.toList());
+
+            ResponseDTO<TodoDetailDTO> response = ResponseDTO.<TodoDetailDTO>builder().data(dtos).build();
+
+            return ResponseEntity.ok().body(response);
+        } catch (Exception e) {
+            ResponseDTO<TodoDetailDTO> response = ResponseDTO.<TodoDetailDTO>builder().error(e.getMessage()).build();
+
+            return ResponseEntity.badRequest().body(response);
+        }
+
+    }
     @PostMapping("/details")
     public ResponseEntity<?> createTodoDetail(@AuthenticationPrincipal String userId, @PathVariable("todoId") String todoId, @RequestBody TodoDetailDTO dto) {
         try {

@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface TodoDetailRepository extends JpaRepository<TodoDetailEntity, String> {
+public interface TodoDetailRepository extends JpaRepository<TodoDetailEntity, Integer> {
     List<TodoDetailEntity> findAllByTodo(TodoEntity todo);
 
 
