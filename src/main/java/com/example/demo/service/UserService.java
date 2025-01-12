@@ -37,4 +37,13 @@ public class UserService {
         }
         return userRepository.findByEmailAndPassword(email, password);
     }
+
+    public UserEntity getByUserEmail(final String email) {
+        return userRepository.findByEmail(email);
+    }
+
+    public UserEntity getByUserId(final String userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+    }
 }
